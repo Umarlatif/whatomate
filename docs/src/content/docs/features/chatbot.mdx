@@ -103,10 +103,11 @@ Create automated responses triggered by specific keywords or phrases.
 3. **Configure Response**
 
    Set the response type and content:
-   - Text message
-   - Template message
-   - Media (image, video, document)
-   - Trigger a conversation flow
+   - **Text** - Send a text message reply
+   - **Template** - Send a pre-approved template message
+   - **Media** - Send image, video, or document
+   - **Flow** - Trigger a conversation flow
+   - **Transfer to Agent** - Transfer the conversation to a human agent
 
 4. **Set Priority**
 
@@ -254,6 +255,8 @@ Configure queue behavior in **Chatbot > Settings**:
 
 - **Allow Agents to Pick from Queue** - When enabled, agents can self-assign transfers by clicking "Pick Next". When disabled, only admins/managers can assign transfers.
 
+- **Assign to Same Agent** - When enabled, transfers are automatically assigned to the contact's existing agent. When disabled, all transfers go to the queue regardless of previous assignments.
+
 ### Transfer Lifecycle
 
 <Steps>
@@ -272,9 +275,16 @@ Configure queue behavior in **Chatbot > Settings**:
 
 4. **Resume Chatbot**
 
-   When the conversation is complete, the agent clicks "Resume" to return the contact to chatbot processing.
+   When the conversation is complete, the agent clicks the "Resume Chatbot" button (play icon) in the chat header to return the contact to chatbot processing.
 
 </Steps>
+
+### Chat View Indicators
+
+When viewing a contact with an active transfer:
+- A **"Chatbot Paused"** badge appears next to the contact name
+- A **Resume Chatbot** button (play icon) appears in the chat header
+- The "Transfer to Agent" option is hidden (already transferred)
 
 ### Auto-Assignment
 
