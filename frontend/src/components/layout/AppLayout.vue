@@ -446,7 +446,7 @@ const handleLogout = async () => {
     </main>
 
     <!-- Away Warning Dialog -->
-    <AlertDialog :open="showAwayWarning" @update:open="showAwayWarning = $event">
+    <AlertDialog :open="showAwayWarning">
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Active Transfers Will Be Returned to Queue</AlertDialogTitle>
@@ -456,8 +456,8 @@ const handleLogout = async () => {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction @click="confirmGoAway">Go Away</AlertDialogAction>
+          <Button variant="outline" @click="showAwayWarning = false">Cancel</Button>
+          <Button @click="confirmGoAway" :disabled="isUpdatingAvailability">Go Away</Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
