@@ -517,7 +517,7 @@ function getMessageContent(message: Message): string {
     return '' // Contacts are displayed as a card, not text
   }
   if (message.message_type === 'unsupported') {
-    return '[Unsupported message type]'
+    return '' // Displayed as a visual card, not text
   }
   return '[Message]'
 }
