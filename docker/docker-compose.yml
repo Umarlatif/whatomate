@@ -1,13 +1,12 @@
+version: '3.8'
+
 services:
   # Whatomate app
   app:
     image: shridh0r/whatomate:latest
-    container_name: whatomate_app
     restart: unless-stopped
-    ports:
-      - "8080:8080"
     networks:
-      - whatomate
+      - dokploy-network
     depends_on:
       db:
         condition: service_healthy
@@ -17,22 +16,26 @@ services:
       - ./uploads:/app/uploads:rw
       - ./config.toml:/app/config.toml:ro
     command: ["server", "-migrate", "-config", "/app/config.toml"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whatomate.rule=Host(`what.riserhost.com`)"
+      - "traefik.http.routers.whatomate.entrypoints=websecure"
+      - "traefik.http.routers.whatomate.tls=true"
+      - "traefik.http.routers.whatomate.tls.certresolver=letsencrypt"
+      - "traefik.http.services.whatomate.loadbalancer.server.port=8080"
 
   # PostgreSQL database
   db:
     image: postgres:17-alpine
-    container_name: whatomate_db
     restart: unless-stopped
     networks:
-      - whatomate
-    ports:
-      - "127.0.0.1:5432:5432"
+      - dokploy-network
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-whatomate}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-whatomate}
-      POSTGRES_DB: ${POSTGRES_DB:-whatomate}
+      POSTGRES_USER: whatomate_user
+      POSTGRES_PASSWORD: Wh@t0m@teDB2024!SecurePass
+      POSTGRES_DB: whatomate_production
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-whatomate} -d ${POSTGRES_DB:-whatomate}"]
+      test: ["CMD-SHELL", "pg_isready -U whatomate_user -d whatomate_production"]
       interval: 10s
       timeout: 5s
       retries: 6
@@ -42,14 +45,12 @@ services:
   # Redis
   redis:
     image: redis:7-alpine
-    container_name: whatomate_redis
     restart: unless-stopped
     networks:
-      - whatomate
-    ports:
-      - "127.0.0.1:6379:6379"
+      - dokploy-network
+    command: redis-server --requirepass Wh@t0m@teRedis2024!SecurePass
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -57,7 +58,8 @@ services:
       - redis-data:/data
 
 networks:
-  whatomate:
+  dokploy-network:
+    external: true
 
 volumes:
   postgres-data:
